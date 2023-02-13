@@ -14,5 +14,17 @@
             <button type="button" class="btn btn-success" id="imfeelinglucky">I'm feeling lucky</button>
             <button type="button" class="btn btn-secondary" id="history">History</button>
         </div>
+
+        <table class="table visually-hidden">
+            <thead>
+            <tr>
+                <th scope="col">Value</th>
+                <th scope="col">Result</th>
+                <th scope="col">Prize</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 @endsection
