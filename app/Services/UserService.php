@@ -17,7 +17,9 @@ class UserService
             DB::beginTransaction();
 
             $model = User::firstOrCreate($userData);
-            $this->createNewLinkForUser($model->id);
+            if (!$model->links()->count()) {
+                $this->createNewLinkForUser($model->id);
+            }
 
             DB::commit();
         } catch (\Throwable $exception) {
