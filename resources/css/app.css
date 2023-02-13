@@ -1,3 +1,28 @@
 body {
     font-family: 'Nunito', sans-serif;
 }
+
+#form-register {
+    max-width: 330px;
+    padding: 40px 15px;
+}
+
+#form-register input.f_un {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#form-register input.f_pn {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.cabinet {
+    max-width: 400px;
+}
+.cabinet .list {
+    width: 400px;
+    display: flex;
+}

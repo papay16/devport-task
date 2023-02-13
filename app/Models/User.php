@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -32,4 +33,9 @@ class User extends Authenticatable
     protected $hidden = [
         'remember_token',
     ];
+
+    public function links(): HasMany
+    {
+        return $this->hasMany(Link::class, 'user_id');
+    }
 }

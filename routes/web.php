@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('auth')->group(function () {
+    Route::get('/', [UserController::class, 'cabinet'])->name('home');
+    Route::any('/logout', [UserController::class, 'logout'])->name('logout');
+
+    Route::get('/apage/{hash}', [UserController::class, 'apage'])->name('apage');
+    Route::get('/apage/{hash}/new', [UserController::class, 'newLink'])->name('new-link');
+    Route::get('/apage/{hash}/deactivate', [UserController::class, 'deactivateLink'])->name('deactivate-link');
+});
+
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [UserController::class, 'showRegisterForm'])->middleware('guest')->name('register');
+    Route::post('/register', [UserController::class, 'processRegister'])->middleware('guest');
 });
