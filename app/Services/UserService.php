@@ -17,10 +17,7 @@ class UserService
             DB::beginTransaction();
 
             $model = User::firstOrCreate($userData);
-            $model->links()->create([
-                'hash' => Str::uuid(),
-                'expires_at' => now()->addDays(7),
-            ]);
+            $this->createNewLinkForUser($model->id);
 
             DB::commit();
         } catch (\Throwable $exception) {
@@ -32,7 +29,7 @@ class UserService
         return $model;
     }
 
-    public function createNewLinkForUser($userId): Link
+    public function createNewLinkForUser(int $userId): Link
     {
         $user = User::findOrFail($userId);
         /**
@@ -67,7 +64,7 @@ class UserService
         return (bool) $this->getUserLink($userId, $linkHash);
     }
 
-    public function deactivateLink($linkHash): bool
+    public function deactivateLink(string $linkHash): bool
     {
         $link = Link::whereHash($linkHash)->first();
 
@@ -80,10 +77,9 @@ class UserService
         return $link->save();
     }
 
-    public function createAttemptByLink($linkId): ?Attempt
+    public function createAttemptByLink(int $linkId): ?Attempt
     {
         try {
-
             $value = random_int(1, 1000);
             $result = $value % 2 === 0 ? Attempt::RESULT_WIN : Attempt::RESULT_LOSE;
 
@@ -99,7 +95,7 @@ class UserService
     }
 
     /**
-     * @param $value
+     * @param int $value
      *
      * If value attribute > 900, prize = 70% of value.
      * If value attribute > 600, prize = 50% of value.
@@ -108,7 +104,7 @@ class UserService
      *
      * @return float
      */
-    private function _calculatePrize($value): float
+    private function _calculatePrize(int $value): float
     {
         if ($value > 900) {
             $prize = $value * 0.7;
