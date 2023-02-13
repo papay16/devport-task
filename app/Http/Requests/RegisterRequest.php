@@ -28,4 +28,12 @@ class RegisterRequest extends FormRequest
             'phone_number' => ['required', 'string'],
         ];
     }
+
+    public function getData(): array
+    {
+        return [
+            'username' => $this->get('username'),
+            'phone_number' => $this->get('phone_number'),
+        ];
+    }
 }

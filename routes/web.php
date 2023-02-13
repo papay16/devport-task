@@ -18,9 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [UserController::class, 'cabinet'])->name('home');
     Route::any('/logout', [UserController::class, 'logout'])->name('logout');
 
-    Route::get('/apage/{hash}', [UserController::class, 'apage'])->name('apage');
-    Route::get('/apage/{hash}/new', [UserController::class, 'newLink'])->name('new-link');
-    Route::get('/apage/{hash}/deactivate', [UserController::class, 'deactivateLink'])->name('deactivate-link');
+    Route::get('/page-a/{hash}', [UserController::class, 'pageA'])->name('page-a');
+    Route::get('/page-a/{hash}/new', [UserController::class, 'newLink'])->name('new-link');
+    Route::get('/page-a/{hash}/deactivate', [UserController::class, 'deactivateLink'])->name('deactivate-link');
 });
 
 Route::middleware('guest')->group(function () {

@@ -10,10 +10,10 @@
             <div class="list">
                 <ul class="list-group">
                     @foreach($links as $link)
-                        <li class="list-group-item @if($link->expired) disabled @endif">
-                            @if($link->expired) <s> @endif
-                            <a href="{{ route('apage', ['hash' => $link->hash]) }}">{{ $link->hash }}</a>
-                            @if($link->expired) </s> @endif
+                        <li class="list-group-item @if($link->isExpired) disabled @endif">
+                            @if($link->isExpired) <s> @endif
+                            <a href="{{ route('page-a', ['hash' => $link->hash]) }}">{{ $link->hash }}</a>
+                            @if($link->isExpired) </s> @endif
                         </li>
                     @endforeach
                 </ul>

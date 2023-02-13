@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -17,28 +16,20 @@ class UserController extends Controller
         return view('register');
     }
 
-    public function processRegister(RegisterRequest $request): RedirectResponse
+    public function processRegister(RegisterRequest $request, UserService $userService): RedirectResponse
     {
-        if (!$user = User::firstOrCreate($request->validated())) {
-            return redirect()->back()->withErrors(['username' => 'asdas']);
+        if (!$user = $userService->createNewUser($request->getData())) {
+            return redirect()->back()->withErrors(['username' => 'Check please your information and try again']);
         }
-
-        $user->links()->create([
-            'hash' => Str::uuid(),
-            'expires_at' => now()->addDays(7),
-        ]);
 
         Auth::login($user);
         return redirect()->route('home');
     }
 
-    public function cabinet(): View
+    public function cabinet(UserService $userService): View
     {
-        $user = Auth::user();
-
         return view('cabinet', [
-            'user' => $user,
-            'links' => $user->links,
+            'links' => $userService->getUserLinks(Auth::id()),
         ]);
     }
 
@@ -46,6 +37,36 @@ class UserController extends Controller
     {
         Auth::logout();
         Session::regenerate();
+
+        return redirect()->route('home');
+    }
+
+    public function pageA(string $hash, UserService $userService): View| RedirectResponse
+    {
+        $link = $userService->getUserLink(Auth::id(), $hash);
+        if (!$link) {
+            return redirect()->route('home');
+        }
+
+        return view('page-a', ['link' => $link]);
+    }
+
+    public function newLink(string $hash, UserService $userService): RedirectResponse
+    {
+        if (!$userService->userHasLink(Auth::id(), $hash)) {
+            return redirect()->route('home');
+        }
+
+        $newLink = $userService->createNewLinkForUser(Auth::id());
+
+        return redirect()->route('page-a', ['hash' => $newLink->hash]);
+    }
+
+    public function deactivateLink(string $hash, UserService $userService): RedirectResponse
+    {
+        if ($userService->userHasLink(Auth::id(), $hash)) {
+            $userService->deactivateLink($hash);
+        }
 
         return redirect()->route('home');
     }
